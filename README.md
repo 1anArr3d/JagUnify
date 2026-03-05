@@ -25,5 +25,5 @@ This project is currently in the MVP development phase for an academic course.
 - Ian Arredondo
 - Christian Hernandez
 - Dustin Heagerty
-
+- Trieu Do
 
