@@ -3,9 +3,6 @@
 ## Project
 JagUnify — TAMUSA Information Chatbot
 
-## Sprint Goal
-Develop the initial RAG (Retrieval-Augmented Generation) pipeline, create the frontend chat widget, and produce the documentation required for Milestone 1.
-
 ---
 
 ## Team Members
@@ -63,5 +60,6 @@ Develop the initial RAG (Retrieval-Augmented Generation) pipeline, create the fr
 | Evaluation dataset | Create 20 evaluation questions | Dustin |
 | Environment configuration | Create `.env.example` file for project setup | Christian |
 | Spike Recovery Report | Reported on what went wrong in the project, why the Spike Demo was not delivered, and the project's future | Dustin |
+
 
 ---
