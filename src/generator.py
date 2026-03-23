@@ -3,15 +3,16 @@ warnings.filterwarnings("ignore", category=UserWarning)
 import os
 from llama_index.core import PromptTemplate, Settings
 from llama_index.core.query_engine import CitationQueryEngine
+from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.llms.openai import OpenAI
 from retrieval import load_index
 
-TOP_K = 7  # Single source of truth for retrieval depth
+CANDIDATE_K = 14  # Initial retrieval pool for the re-ranker to select from
+TOP_K = 7         # Final chunks passed to the LLM after re-ranking
 
 # Sets up the engine that turns retrieved chunks into a final answer with citations
 def jag_query_engine(index):
 
-    # FIX 1: Use gpt-4o-mini to stop the stuttering/looping bug
     Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.1)
 
     # Custom prompt template for strict grounding
@@ -32,11 +33,18 @@ def jag_query_engine(index):
 
     qa_prompt = PromptTemplate(template=qa_prompt_tmpl_str)
 
-    # Initialize the Citation engine
+    # Re-ranker: scores each (question, chunk) pair together so the best chunks
+    # reach the LLM regardless of surface-level wording overlap between doc types
+    reranker = SentenceTransformerRerank(
+        model="cross-encoder/ms-marco-MiniLM-L-12-v2",
+        top_n=TOP_K,
+    )
+
     query_engine = CitationQueryEngine.from_args(
         index=index,
-        similarity_top_k=TOP_K,
-        citation_chunk_size=1024,  # Match ingestion chunk size so nodes aren't re-split
+        similarity_top_k=CANDIDATE_K,
+        citation_chunk_size=1024,
+        node_postprocessors=[reranker],
     )
 
     query_engine.update_prompts({"response_synthesizer:text_qa_template": qa_prompt})

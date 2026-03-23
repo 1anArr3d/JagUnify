@@ -1,53 +1,55 @@
 import re
-#Validates and formats the response for the UI and ensures inline citations match the source list and handles refusals.
-def format_citations(response):
 
-    #Handle Refusal Case
-    # If the response is empty or indicates no information found
-    refusal_msg = "I cannot find supporting information in the indexed TAMUSA documents."
-    
+REFUSAL_MSG = "I cannot find supporting information in the indexed TAMUSA documents."
+
+# Patterns that indicate the LLM issued a refusal rather than a grounded answer
+_REFUSAL_PATTERNS = [
+    "cannot find supporting information",
+    "i am sorry",
+    "i'm sorry",
+    "not contained in the context",
+]
+
+def format_citations(response):
+    # No response or nothing was retrieved
     if not response or not response.source_nodes:
-        return {
-            "answer": refusal_msg,
-            "sources": []
-        }
+        return {"answer": REFUSAL_MSG, "sources": []}
 
     answer_text = response.response
-    source_nodes = response.source_nodes
-    formatted_sources = []
 
-    #Extract and Format Sources
-    # IDs are position-based (1-indexed) to match the [1],[2] numbers the LLM used in the answer.
-    # Deduplicating by URL and renumbering would cause citation numbers in the answer to point
-    # to the wrong or missing entries in the source list.
-    for i, node in enumerate(source_nodes, start=1):
+    # If the LLM itself refused, normalize to the standard refusal message
+    if any(pattern in answer_text.lower() for pattern in _REFUSAL_PATTERNS):
+        return {"answer": REFUSAL_MSG, "sources": []}
+
+    # If no citation brackets present, the LLM produced an ungrounded answer
+    if "[" not in answer_text:
+        return {"answer": REFUSAL_MSG, "sources": []}
+
+    # Build source list with position-based IDs matching the LLM's [1],[2]... numbering.
+    # Scores come from the re-ranker — higher means the chunk better answers the question.
+    formatted_sources = []
+    for i, node in enumerate(response.source_nodes, start=1):
         url = node.metadata.get('source_url', 'https://www.tamusa.edu')
         snippet = node.get_content()[:150].strip().replace("\n", " ") + "..."
+        score = round(node.score, 4) if node.score is not None else None
         formatted_sources.append({
             "id": i,
             "url": url,
-            "snippet": snippet
+            "snippet": snippet,
+            "score": score,
         })
-
-    #Final Verification
-    # Ensure the answer actually contains citation brackets [1]
-    # If the LLM forgot them, we return the refusal to stay grounded
-    if "[" not in answer_text:
-        # Check if the text itself says it doesn't know
-        if "sorry" in answer_text.lower() or "cannot find" in answer_text.lower():
-            return {"answer": refusal_msg, "sources": []}
 
     return {
         "answer": answer_text,
-        "sources": formatted_sources
+        "sources": formatted_sources,
     }
 
 def print_display(formatted_output):
     print(f"\nResponse: {formatted_output['answer']}")
-    
     if formatted_output['sources']:
         print("\nSources:")
         for src in formatted_output['sources']:
-            print(f"[{src['id']}] {src['url']}")
+            score_str = f" (score: {src['score']})" if src['score'] is not None else ""
+            print(f"[{src['id']}] {src['url']}{score_str}")
     else:
         print("\n(No sources verified for this response)")
