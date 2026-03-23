@@ -1,5 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*urllib3.*")
 import os
 from llama_index.core import PromptTemplate, Settings
 from llama_index.core.query_engine import CitationQueryEngine
@@ -63,18 +64,18 @@ if __name__ == "__main__":
     
     # --- TEST 1: Grounded Policy Question ---
     print("TEST 1: GROUNDED TAMUSA INQUIRY")
-    
-    query_1 = "Where can I access the student portal?"
+
+    query_1 = "What are the graduation requirements for the Computer Science degree?"
     response_1 = engine.query(query_1)
-    
+
     # Pass raw response through the Citation Layer
     final_output_1 = format_citations(response_1)
     print_display(final_output_1)
 
     # --- TEST 2: Out-of-Scope (Refusal) ---
     print("TEST 2: OUT-OF-SCOPE REFUSAL")
-    
-    query_2 = "Lowkenuinely what should i eat tomorrow?"
+
+    query_2 = "What should I eat for lunch tomorrow?"
     response_2 = engine.query(query_2)
     
     # Pass through Citation Layer to ensure it triggers the mandatory refusal message
