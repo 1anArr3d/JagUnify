@@ -4,7 +4,9 @@ import os
 from llama_index.core import PromptTemplate, Settings
 from llama_index.core.query_engine import CitationQueryEngine
 from llama_index.llms.openai import OpenAI
-from retrieval import get_retriever
+from retrieval import load_index
+
+TOP_K = 7  # Single source of truth for retrieval depth
 
 # Sets up the engine that turns retrieved chunks into a final answer with citations
 def jag_query_engine(index):
@@ -33,8 +35,8 @@ def jag_query_engine(index):
     # Initialize the Citation engine
     query_engine = CitationQueryEngine.from_args(
         index=index,
-        similarity_top_k=7, #We can increase this to give the LLM more context to work with which can help with recall at the cost of more tokens and potentially more noise, but since we have a strict prompt it should be able to handle it
-        citation_chunk_size=512,
+        similarity_top_k=TOP_K,
+        citation_chunk_size=1024,  # Match ingestion chunk size so nodes aren't re-split
     )
 
     query_engine.update_prompts({"response_synthesizer:text_qa_template": qa_prompt})
@@ -42,13 +44,11 @@ def jag_query_engine(index):
     return query_engine
 
 if __name__ == "__main__":
-    from retrieval import get_retriever
     from citation_formatter import format_citations, print_display
-    
+
     # 1. Load the existing storage
     # (Only use build_vector_store_index() if you have deleted the /storage folder)
-    retriever_obj = get_retriever(index=None)
-    index = retriever_obj._index
+    index = load_index()
     
     # 2. Initialize the grounded engine
     engine = jag_query_engine(index)

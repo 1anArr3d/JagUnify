@@ -1,4 +1,3 @@
-from operator import index
 import re
 #Validates and formats the response for the UI and ensures inline citations match the source list and handles refusals.
 def format_citations(response):
@@ -16,24 +15,19 @@ def format_citations(response):
     answer_text = response.response
     source_nodes = response.source_nodes
     formatted_sources = []
-    seen_urls = set()  # To track unique sources
-    current_id = 1
 
     #Extract and Format Sources
-    for node in source_nodes:
+    # IDs are position-based (1-indexed) to match the [1],[2] numbers the LLM used in the answer.
+    # Deduplicating by URL and renumbering would cause citation numbers in the answer to point
+    # to the wrong or missing entries in the source list.
+    for i, node in enumerate(source_nodes, start=1):
         url = node.metadata.get('source_url', 'https://www.tamusa.edu')
-        
-        #Grab a small snippet of the text used (first 150 chars)
-        if url not in seen_urls:
-            snippet = node.get_content()[:150].strip().replace("\n", " ") + "..."
-        
-            formatted_sources.append({
-                "id": current_id,
-                "url": url,
-                "snippet": snippet
-            })
-            seen_urls.add(url)
-            current_id += 1
+        snippet = node.get_content()[:150].strip().replace("\n", " ") + "..."
+        formatted_sources.append({
+            "id": i,
+            "url": url,
+            "snippet": snippet
+        })
 
     #Final Verification
     # Ensure the answer actually contains citation brackets [1]

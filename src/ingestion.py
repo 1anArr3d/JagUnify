@@ -28,10 +28,13 @@ def load_tamusa_data(directory_path):
                 #Extract the URL from the file header
                 source_url = extract_source_url(file_path)
 
-                #Read the content of the file while skipping the first line
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
 
+                    #Strip nav boilerplate — keep only content from the first heading onwards
+                    heading_match = re.search(r'^#{1,6}\s', content, re.MULTILINE)
+                    if heading_match:
+                        content = content[heading_match.start():]
 
                     #Create a LLamaIndex Document with the metadata
                     #This metadata is what allows for "verifiable citations"

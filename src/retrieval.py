@@ -26,16 +26,18 @@ def build_vector_store_index(data_directory='../docs/tamusa_data', persist_direc
     index = VectorStoreIndex.from_documents(documents, storage_context=storage_context, show_progress=True)
     return index
 
-#Loads an existing index and returns a retriever object
-def get_retriever(index=None, persist_directory='./storage'):
+#Loads an existing persisted index from ChromaDB
+def load_index(persist_directory='./storage'):
+    db = chromadb.PersistentClient(path=persist_directory)
+    chroma_collection = db.get_or_create_collection(name="tamusa_collection")
+    vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+    return VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
+#Returns a retriever for standalone use or testing
+def get_retriever(index=None, similarity_top_k=7, persist_directory='./storage'):
     if index is None:
-        db = chromadb.PersistentClient(path=persist_directory)
-        chroma_collection = db.get_or_create_collection(name="tamusa_collection")
-        vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-        index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
-    
-    return index.as_retriever(similarity_top_k=3)
+        index = load_index(persist_directory)
+    return index.as_retriever(similarity_top_k=similarity_top_k)
 
 if __name__ == "__main__":
     my_index = build_vector_store_index()
