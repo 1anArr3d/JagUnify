@@ -6,6 +6,7 @@ from llama_index.core import PromptTemplate, Settings
 from llama_index.core.query_engine import CitationQueryEngine
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.llms.openai import OpenAI
+from llama_index.core.llms import ChatMessage, MessageRole
 from retrieval import load_index
 
 CANDIDATE_K = 14  # Initial retrieval pool for the re-ranker to select from
@@ -51,6 +52,39 @@ def jag_query_engine(index):
     query_engine.update_prompts({"response_synthesizer:text_qa_template": qa_prompt})
 
     return query_engine
+
+
+# Rewrites the latest question as a standalone question given prior conversation turns.
+# history is a list of {"role": "human"|"bot", "text": "..."} dicts.
+# Returns the condensed question string (or original question if no history).
+def condense_question(history: list, question: str) -> str:
+    if not history:
+        return question
+
+    llm = OpenAI(model="gpt-4o-mini", temperature=0)
+
+    convo_lines = []
+    for turn in history:
+        role = "User" if turn.get("role") == "human" else "Assistant"
+        convo_lines.append(f"{role}: {turn.get('text', '')}")
+    convo_text = "\n".join(convo_lines)
+
+    system_msg = ChatMessage(
+        role=MessageRole.SYSTEM,
+        content=(
+            "Given the conversation history and a follow-up question, "
+            "rewrite the follow-up question as a fully self-contained standalone question. "
+            "Do not answer the question — only rewrite it. "
+            "If the follow-up is already standalone, return it unchanged."
+        ),
+    )
+    user_msg = ChatMessage(
+        role=MessageRole.USER,
+        content=f"Conversation:\n{convo_text}\n\nFollow-up question: {question}\n\nStandalone question:",
+    )
+
+    response = llm.chat([system_msg, user_msg])
+    return response.message.content.strip()
 
 if __name__ == "__main__":
     from citation_formatter import format_citations, print_display
