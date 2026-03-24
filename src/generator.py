@@ -1,7 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", message=".*urllib3.*")
-import os
 from llama_index.core import PromptTemplate, Settings
 from llama_index.core.query_engine import CitationQueryEngine
 from llama_index.core.postprocessor import SentenceTransformerRerank

@@ -40,23 +40,47 @@ export default function ChatWindow() {
       time: formatTime(now),
     };
 
+    // Snapshot history before adding the new message
+    const history = messages.map((m) => ({ role: m.role, text: m.text }));
+
     setMessages((prev) => [...prev, humanMessage]);
     setInput("");
     setIsWaiting(true);
 
-    await new Promise((r) => setTimeout(r, 1000));
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/ask`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: content, history }),
+      });
 
-    const botMessage = {
-      id: Date.now() + 1,
-      role: "bot",
-      text: `Received: ${content}`,
-      time: formatTime(new Date()),
-    };
+      const data = await res.json();
 
-    setMessages((prev) => [...prev, botMessage]);
-    setIsWaiting(false);
-
-    if (inputRef.current) inputRef.current.focus();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "bot",
+          text: data.answer,
+          sources: data.sources ?? [],
+          time: formatTime(new Date()),
+        },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "bot",
+          text: "Sorry, I'm having trouble connecting. Please try again.",
+          sources: [],
+          time: formatTime(new Date()),
+        },
+      ]);
+    } finally {
+      setIsWaiting(false);
+      if (inputRef.current) inputRef.current.focus();
+    }
   };
 
   return (

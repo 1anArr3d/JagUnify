@@ -1,3 +1,43 @@
+// Renders bot answer text with bold, line breaks, and clickable citation links
+function renderBotText(text, sources) {
+  return text.split("\n").map((line, lineIdx, arr) => {
+    const parts = line.split(/(\*\*[^*]+\*\*|\[\d+\])/g);
+
+    const rendered = parts.map((part, partIdx) => {
+      const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
+      if (boldMatch) return <strong key={partIdx}>{boldMatch[1]}</strong>;
+
+      const citeMatch = part.match(/^\[(\d+)\]$/);
+      if (citeMatch) {
+        const id = parseInt(citeMatch[1]);
+        const source = sources?.find((s) => s.id === id);
+        if (source) {
+          return (
+            <a
+              key={partIdx}
+              href={source.url}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-amber-200 hover:underline"
+            >
+              [{id}]
+            </a>
+          );
+        }
+      }
+
+      return part;
+    });
+
+    return (
+      <span key={lineIdx}>
+        {rendered}
+        {lineIdx < arr.length - 1 && <br />}
+      </span>
+    );
+  });
+}
+
 export default function MessageBubble({ message }) {
   const isHuman = message.role === "human";
 
@@ -11,7 +51,9 @@ export default function MessageBubble({ message }) {
             : "ml-4 self-start bg-[#6b2f3cab]",
         ].join(" ")}
       >
-        {message.text}
+        {isHuman
+          ? message.text
+          : renderBotText(message.text, message.sources)}
       </div>
 
       <div
