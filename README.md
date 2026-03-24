@@ -1,56 +1,75 @@
 # JagUnify
 
-JagUnify is a web-based AI chatbot designed to help Texas A&M University–San Antonio students quickly find accurate campus information in one place.
-
-## Purpose
-
-Students often struggle to locate information about advising, financial aid, tutoring, IT support, and campus events because resources are spread across multiple websites. JagUnify solves this by providing a single AI-powered chat interface that gives fast, clear answers using official university sources.
+JagUnify is an AI-powered academic advisor chatbot for Texas A&M University–San Antonio students. It answers questions about degree requirements, admissions, financial aid, academic policies, and registration using official catalog sources — with verifiable citations.
 
 ## Features
 
-- AI-powered chatbot
-- Web-based chat interface
-- Covers core student service categories
-- Provides official links for verification
-- Simple and student-friendly design
-
-## Setup instructions
-
-- Clone the repo
-
-Create .env file in the root folder with this variable:
-
-```
-OPENAI_API_KEY=your_api_key
-```
-
-Open command prompt to install required packages:
-
-```
-pip install llama-index llama-index-llms-openai chromadb python-dotenv llama-index-vector-stores-chroma
-```
-
-Go to /src folder to build vector database to convert texts into embeddings
-
-```
-python .\retrieval.py
-```
-
-Then run the generator.py file with to test the AI's response:
-
-```
-python .\generator.py
-```
+- Grounded answers with inline citations linking to official catalog pages
+- Multi-turn conversation memory — follow-up questions retain prior context
+- Refusal when a question falls outside the indexed catalog
+- Re-ranker pipeline for high-quality source retrieval
+- React chat interface with campus background
 
 ## Tech Stack
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: Python
-- AI: OpenAI API
+- **Frontend:** React + Vite + Tailwind CSS
+- **Backend:** FastAPI (Python)
+- **RAG Pipeline:** LlamaIndex + ChromaDB + OpenAI
+- **Re-ranker:** cross-encoder/ms-marco-MiniLM-L-12-v2
+
+## Setup
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 18+
+- An OpenAI API key
+
+### Backend
+
+1. Clone the repo
+2. Create a `.env` file in the root folder (see `.env.example`):
+   ```
+   OPENAI_API_KEY=your_api_key
+   ```
+3. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+4. Build the vector index (first time only):
+   ```
+   cd src
+   python retrieval.py
+   ```
+5. Start the API server:
+   ```
+   cd src
+   python -m uvicorn app:app --reload
+   ```
+
+### Frontend
+
+1. Navigate to the frontend directory:
+   ```
+   cd "Trieu's frontend/react"
+   ```
+2. Create a `.env` file (see `.env.example`):
+   ```
+   VITE_API_URL=http://localhost:8000
+   ```
+3. Install dependencies:
+   ```
+   npm install
+   ```
+4. Start the dev server:
+   ```
+   npm run dev
+   ```
+5. Open `http://localhost:5173`
 
 ## Project Status
 
-This project is currently in the MVP development phase for an academic course.
+Currently in active development for an academic course (Sprint 1 complete).
 
 ## Team
 

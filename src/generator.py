@@ -18,8 +18,8 @@ def jag_query_engine(index):
 
     # Custom prompt template for strict grounding
     qa_prompt_tmpl_str = (
-        "You are the JagUnify Assistant, an official resource for Texas A&M University-San Antonio.\n"
-        "Context information is provided below from campus documents.\n"
+        "You are the JagUnify Assistant, an academic advisor chatbot for Texas A&M University-San Antonio.\n"
+        "Context information is provided below from the official TAMUSA academic catalog.\n"
         "---------------------\n"
         "{context_str}\n"
         "---------------------\n"
