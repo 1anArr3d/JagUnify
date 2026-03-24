@@ -9,7 +9,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.llms import ChatMessage, MessageRole
 from retrieval import load_index
 
-CANDIDATE_K = 14  # Initial retrieval pool for the re-ranker to select from
+CANDIDATE_K = 20  # Initial retrieval pool for the re-ranker to select from
 TOP_K = 7         # Final chunks passed to the LLM after re-ranking
 
 # Sets up the engine that turns retrieved chunks into a final answer with citations
@@ -27,7 +27,8 @@ def jag_query_engine(index):
         "Instructions:\n"
         "1. Answer the query using ONLY the context provided.\n"
         "2. Use inline citations in the format [1], [2], etc.\n"
-        "3. If the answer is not contained in the context, strictly say: "
+        "3. Do NOT include any URLs or hyperlinks in your answer. Reference sources using citation numbers only.\n"
+        "4. If the answer is not contained in the context, strictly say: "
         "'I am sorry, but I cannot find supporting information in the indexed TAMUSA documents.'\n\n"
         "Query: {query_str}\n"
         "Answer: "
@@ -87,31 +88,54 @@ def condense_question(history: list, question: str) -> str:
     return response.message.content.strip()
 
 if __name__ == "__main__":
-    from citation_formatter import format_citations, print_display
+    from citation_formatter import format_citations
 
-    # 1. Load the existing storage
-    # (Only use build_vector_store_index() if you have deleted the /storage folder)
+    TEST_CASES = [
+        # Grounded — catalog-scoped academic advising questions
+        (1,  "What are the graduation requirements for undergraduate students at TAMUSA?"),
+        (2,  "What is the required GPA to avoid academic probation?"),
+        (3,  "What are the core curriculum requirements for a Bachelor of Science degree?"),
+        (4,  "What courses are required for the Computer Science degree?"),
+        (5,  "What is the maximum number of credit hours a student can take per semester?"),
+        (6,  "How does a student appeal a grade at TAMUSA?"),
+        (7,  "What are the admission requirements for first-year students?"),
+        (8,  "What transfer credit policies apply to incoming transfer students?"),
+        (9,  "What is the academic calendar for the upcoming fall semester?"),
+        (10, "How can a student apply for financial aid at TAMUSA?"),
+        (11, "What are the requirements for the Business Administration degree?"),
+        (12, "What graduate programs does TAMUSA offer?"),
+        (13, "What is the minimum GPA required to graduate?"),
+        (14, "How many total credit hours are needed to earn a bachelor's degree?"),
+        # Refusal — out of scope
+        (15, "What are the operating hours of the TAMUSA library?"),
+        (16, "What meal plans are available on campus?"),
+        (17, "Where can I find on-campus parking at TAMUSA?"),
+        (18, "Does TAMUSA have a football team?"),
+        (19, "What NFL players graduated from TAMUSA?"),
+        (20, "What is the average starting salary for TAMUSA graduates?"),
+    ]
+
     index = load_index()
-    
-    # 2. Initialize the grounded engine
     engine = jag_query_engine(index)
-    
-    # --- TEST 1: Grounded Policy Question ---
-    print("TEST 1: GROUNDED TAMUSA INQUIRY")
 
-    query_1 = "What are the graduation requirements for the Computer Science degree?"
-    response_1 = engine.query(query_1)
+    for num, question in TEST_CASES:
+        print(f"\n{'='*60}")
+        print(f"TEST CASE {num}")
+        print(f"Question: {question}")
 
-    # Pass raw response through the Citation Layer
-    final_output_1 = format_citations(response_1)
-    print_display(final_output_1)
+        response = engine.query(question)
+        result = format_citations(response)
 
-    # --- TEST 2: Out-of-Scope (Refusal) ---
-    print("TEST 2: OUT-OF-SCOPE REFUSAL")
+        print(f"Answer: {result['answer']}")
 
-    query_2 = "What should I eat for lunch tomorrow?"
-    response_2 = engine.query(query_2)
-    
-    # Pass through Citation Layer to ensure it triggers the mandatory refusal message
-    final_output_2 = format_citations(response_2)
-    print_display(final_output_2)
+        if result['sources']:
+            print("Sources:")
+            for src in result['sources']:
+                score_str = f" (score: {src['score']})" if src['score'] is not None else ""
+                print(f"  [{src['id']}] {src['url']}{score_str}")
+                print(f"       {src['snippet']}")
+        else:
+            print("Sources: None (Refusal)")
+
+    print(f"\n{'='*60}")
+    print("All test cases complete.")

@@ -25,6 +25,20 @@ def format_citations(response):
     if "[" not in answer_text:
         return {"answer": REFUSAL_MSG, "sources": []}
 
+    # Strip any URLs the LLM hallucinated that aren't in the retrieved sources.
+    # The prompt instructs the LLM not to include URLs, but this is a safety net.
+    source_urls = {node.metadata.get("source_url", "") for node in response.source_nodes}
+    answer_text = re.sub(
+        r'\[([^\]]+)\]\((https?://\S+)\)',  # markdown link: [text](url)
+        lambda m: m.group(1) if m.group(2) not in source_urls else m.group(0),
+        answer_text,
+    )
+    answer_text = re.sub(
+        r'(?<!\()(https?://\S+)',  # bare URL not already inside a markdown link
+        lambda m: "" if m.group(1) not in source_urls else m.group(1),
+        answer_text,
+    )
+
     # Build source list with position-based IDs matching the LLM's [1],[2]... numbering.
     # Scores come from the re-ranker — higher means the chunk better answers the question.
     formatted_sources = []

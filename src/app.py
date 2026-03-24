@@ -3,10 +3,14 @@ warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", message=".*urllib3.*")
 
 import asyncio
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from retrieval import load_index
 from generator import jag_query_engine, condense_question
@@ -24,10 +28,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Allow requests from the React dev server
+# Allow requests from the configured frontend origin
+_ALLOWED_ORIGIN = os.getenv("CORS_ORIGIN", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[_ALLOWED_ORIGIN],
     allow_methods=["POST"],
     allow_headers=["*"],
 )

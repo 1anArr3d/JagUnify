@@ -1,8 +1,10 @@
 # Evaluation Overview
 This document evaluates the grounding performance and retrieval accuracy of the JagUnify RAG pipeline using 20 distinct test cases.
 
+**Scope:** Catalog-only index (`catalog.tamusa.edu`). Questions outside this scope — library hours, dining, campus events, athletics — are expected refusals.
+
 **Grounding Rules:**
-- Every answer must cite at least one retrieved TAMUSA source.
+- Every answer must cite at least one retrieved TAMUSA catalog source.
 - No unsupported claims outside retrieved text.
 - If no relevant source is retrieved, the system must refuse.
 
@@ -11,161 +13,210 @@ This document evaluates the grounding performance and retrieval accuracy of the 
 # Test Cases
 
 ## Test Case 1
-**Question:** What are the admissions requirements for freshman students at TAMUSA?  
-**Expected Source:** TAMUSA Undergraduate Admissions Page  
-**Retrieved Document(s):** [1] admissions/applying-for-admission/first-year-students.html, [2] admissions/admitted-students-checklist/admitted-first-year-jag-hq.html  
-**Generated Answer:** The admissions requirements include Automatic Admission (Top 35%, 3.0 GPA, or specific SAT/ACT scores) and Committee Review for others. [1][2]  
+**Question:** What are the graduation requirements for undergraduate students at TAMUSA?
+**Expected Source:** catalog.tamusa.edu — undergraduate graduation requirements
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/other-degree-requirement/, [2] catalog.tamusa.edu/undergraduate/arts-sciences/natural-sciences/biology-ba/, [4] catalog.tamusa.edu/undergraduate/arts-sciences/language-literature-arts/english-ba-rhetoric-writing-emphasis/
+**Generated Answer:** Graduation requires a minimum 2.0 GPA in major and minor fields, 120 total credit hours (42 core, 36 upper-division minimum), 25% residency at TAMUSA, TSI compliance for upper-division registration, and completion of all prerequisite courses. [1][2][4]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 2
-**Question:** What is the deadline to apply for fall semester admission?  
-**Expected Source:** TAMUSA Admissions Deadlines Page  
-**Retrieved Document(s):** [7] catalog.tamusa.edu/graduate/academic-calendar/, [10] catalog.tamusa.edu/undergraduate/academic-calendar/  
-**Generated Answer:** The priority application deadline for the fall semester is March 15, and the final application deadline is June 30 [7][10].  
+**Question:** What is the required GPA to avoid academic probation?
+**Expected Source:** catalog.tamusa.edu — academic policies / grade requirements
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/grade-requirements/
+**Generated Answer:** A minimum 2.0 cumulative institutional GPA is required to avoid academic probation. Students in the Teacher Preparation Program must maintain a 2.75. [1]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 3
-**Question:** Where is the Office of the Registrar located?  
-**Expected Source:** TAMUSA Registrar Contact Page  
-**Retrieved Document(s):** None (System Refusal)  
-**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.  
-**Verification Status:** **PASS** (Correct Refusal based on index state)
+**Question:** What are the core curriculum requirements for a Bachelor of Science degree?
+**Expected Source:** catalog.tamusa.edu — undergraduate core curriculum
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/core-curriculum/
+**Generated Answer:** The core curriculum totals 42 semester credit hours across: Communication (6), Mathematics (3), Life and Physical Sciences (6), Language/Philosophy/Culture (3), Creative Arts (3), American History (6), Government/Political Science (6), Social and Behavioral Sciences (3), Component Area Option (6). [1]
+**Verification Status:** **PASS**
+
+---
 
 ## Test Case 4
-**Question:** What are the operating hours of the TAMUSA library?  
-**Expected Source:** TAMUSA Library Hours Page  
-**Retrieved Document(s):** None (System Refusal)  
-**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.  
-**Verification Status:** **PASS** (Correct Refusal based on index state)
+**Question:** What courses are required for the Computer Science degree?
+**Expected Source:** catalog.tamusa.edu — computer science degree plan
+**Retrieved Document(s):** [2] catalog.tamusa.edu/undergraduate/arts-sciences/computational-engineering-mathematical-sciences/computer-science-bs/, [4] catalog.tamusa.edu/undergraduate/arts-sciences/computational-engineering-mathematical-sciences/computer-science-bs/
+**Generated Answer:** The BS in Computer Science requires 120 credits: 42 core curriculum, 7 departmental hours (lab sciences, Linear Algebra), 18 required support courses (Programming Fundamentals I–III, Discrete Structures, Computer Organization), 34 major courses (Database Systems, Algorithms, OS, Networks, Software Engineering I–II, Security, Senior Project), and 15 upper-division electives. [2][4]
+**Verification Status:** **PASS**
+
+---
 
 ## Test Case 5
-**Question:** How can students apply for financial aid?  
-**Expected Source:** TAMUSA Financial Aid Page  
-**Retrieved Document(s):** [1] paying-for-college/financial-aid/apply-for-aid/index.html, [2] checklist-for-financial-aid.html  
-**Generated Answer:** Students can apply by completing the FAFSA online at studentaid.gov after October 1st. [1][2]  
+**Question:** What is the maximum number of credit hours a student can take per semester?
+**Expected Source:** catalog.tamusa.edu — academic policies / normal course load
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/registration/normal-load/, [3] catalog.tamusa.edu/graduate/academic-regulations/registration/normal-course-load/
+**Generated Answer:** Undergraduates are capped at 18 hours per fall/spring semester; students with a 3.25+ GPA or graduating seniors may exceed this with advisor approval. Graduate students are capped at 15 hours in fall/spring and 12 in summer. [1][3]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 6
-**Question:** What majors are offered at TAMUSA?  
-**Expected Source:** TAMUSA Academic Programs Page  
-**Retrieved Document(s):** None (System Refusal)  
-**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.  
-**Verification Status:** **PASS** (Correct Refusal based on index state)
+**Question:** How does a student appeal a grade at TAMUSA?
+**Expected Source:** catalog.tamusa.edu — academic regulations / grades
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/grades/, [2] catalog.tamusa.edu/graduate/academic-regulations/grades/
+**Generated Answer:** The appeal process: (1) email instructor requesting explanation — starts 30-day window; (2) submit written letter of appeal to instructor; (3) if unresolved, escalate to Department Chair; (4) final escalation to Dean — Dean's decision is final. Academic misconduct grade disputes follow a separate process. Grade changes not accepted after one academic year. [1][2]
+**Verification Status:** **PASS**
+
+---
 
 ## Test Case 7
-**Question:** What GPA is required for academic probation?  
-**Expected Source:** TAMUSA Academic Standing Policy  
-**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/grade-requirements/  
-**Generated Answer:** A cumulative GPA below 2.0 at Texas A&M University-San Antonio will result in academic probation for undergraduate students. [1]  
+**Question:** What are the admission requirements for first-year students?
+**Expected Source:** catalog.tamusa.edu — undergraduate admissions
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/student-enrollment/admissions/domestic-students/, [3] catalog.tamusa.edu/undergraduate/student-enrollment/admissions/domestic-students/
+**Generated Answer:** Automatic admission for top 35% class rank, 3.0+ GPA, SAT 1100+, or ACT 22+. Regular admission requires meeting 2 of 3: top 50% rank, 2.0+ GPA, SAT 940+ / ACT 18+. Official final transcript with graduation date and class rank required. Applications via Apply Texas with non-refundable fee. [1][3]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 8
-**Question:** How do I register for classes?  
-**Expected Source:** TAMUSA Registration Guide  
-**Retrieved Document(s):** [1] admissions/registration/index.html, [5] admitted-first-year-jag-hq.html  
-**Generated Answer:** Students must check their registration schedule, clear holds, and use the web registration system in JagWire. [1][5]  
+**Question:** What transfer credit policies apply to incoming transfer students?
+**Expected Source:** catalog.tamusa.edu — transfer credit / student enrollment
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/student-enrollment/transfer-credit/, [2] catalog.tamusa.edu/undergraduate/student-enrollment/transfer-credit/, [3] catalog.tamusa.edu/undergraduate/student-enrollment/transfer-credit/
+**Generated Answer:** Transfer GPA is calculated on all prior academic work but does not affect institutional GPA. Regionally accredited courses evaluated per THECB rules. Completing the 42-hour core at a Texas public institution transfers as a block. Academic Fresh Start available for courses 10+ years old. Military credit awarded via Joint Services Transcript. Credit disputes unresolved within 45 days escalate to the Commissioner of Higher Education. [1][2][3]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 9
-**Question:** Where can students find tutoring services?  
-**Expected Source:** TAMUSA Student Success Center Page  
-**Retrieved Document(s):** [1] tutoring-services/index.html, [2] tutoring-services/supplemental-instruction.html  
-**Generated Answer:** Tutoring is available at the Academic Learning Center (ALC) in Central Academic Building (CAB) 202. [1][2]  
+**Question:** What is the academic calendar for the upcoming fall semester?
+**Expected Source:** catalog.tamusa.edu — academic calendar
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-calendar/, [2] catalog.tamusa.edu/graduate/academic-calendar/
+**Generated Answer:** Fall 2025 16-week session: first class day August 25, census date September 10, last day to drop with W November 14, last class day December 4, finals December 6–12, commencement December 16. Flex I (first 8 weeks): August 25–October 13. Flex II (second 8 weeks): October 14–December 4. Labor Day September 1, Thanksgiving November 27–29. [1][2]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 10
-**Question:** What documents are required for transfer students?  
-**Expected Source:** TAMUSA Transfer Admissions Page  
-**Retrieved Document(s):** [1] admitted-students-transfer.html, [2] catalog.tamusa.edu/undergraduate/student-enrollment/transitions/  
-**Generated Answer:** Transfer students must submit final transcripts and proof of Bacterial Meningitis vaccination. [1][2]  
+**Question:** How can a student apply for financial aid at TAMUSA?
+**Expected Source:** catalog.tamusa.edu — financial aid
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/student-financial-aid-programs/applying-financial-aid/, [2] catalog.tamusa.edu/graduate/student-financial-aid-programs/applying-financial-aid/
+**Generated Answer:** Complete the FAFSA at studentaid.gov using Federal School Code 042485 after October 1. Monitor status via JagWire. Priority deadline is April 15. Notification of eligibility sent 4–6 weeks after all materials received. Students must be fully admitted and degree-seeking to receive federal funding. [1][2]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 11
-**Question:** What is the campus address?  
-**Expected Source:** TAMUSA Contact Page  
-**Retrieved Document(s):** [1] jagwellness/jed-campus.html  
-**Generated Answer:** The campus address is One University Way, San Antonio, TX 78224 [1].  
-**Verification Status:** **PASS**
+**Question:** What are the requirements for the Business Administration degree?
+**Expected Source:** catalog.tamusa.edu — BBA degree plans
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/business/accounting-finance/accounting-bba/, [2] catalog.tamusa.edu/undergraduate/business/management-marketing/management-bba/, [3] catalog.tamusa.edu/undergraduate/business/management-marketing/marketing-bba/
+**Generated Answer:** All BBA programs require 120 total credits: 42 core curriculum, 15 required support, 36 upper-level business core, 24–27 major courses, plus electives to reach 120. Additional requirements: 36 advanced credit hours, 30 upper-division hours (15 in major), 25% residency, 2.0 GPA, exit exam, and two experiential learning courses. [1][2][3]
+**Verification Status:** **PASS** (note: multiple BBA concentrations exist — answer correctly reflects shared requirements)
+
+---
 
 ## Test Case 12
-**Question:** What meal plans are available on campus?  
-**Expected Source:** TAMUSA Dining Services Page  
-**Retrieved Document(s):** [1] dining-services-meal-plans.html  
-**Generated Answer:** Options include Commuter plans (Swipe 50/25) and Resident plans (Jag Unlimited, Jag 210, Jag 180). [1]  
-**Verification Status:** **PASS**
+**Question:** What graduate programs does TAMUSA offer?
+**Expected Source:** catalog.tamusa.edu — graduate programs listing
+**Retrieved Document(s):** None (Refusal)
+**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.
+**Verification Status:** **FAIL** — graduate program info is spread across individual degree pages and the programs-az index page is too navigation-heavy to score well against the re-ranker. With CANDIDATE_K=20 the selected chunks contained no program listings. Known data structure limitation: a dedicated "graduate programs overview" page in the catalog would resolve this.
+
+---
 
 ## Test Case 13
-**Question:** How can students request official transcripts?  
-**Expected Source:** TAMUSA Registrar Transcript Request Page  
-**Retrieved Document(s):** [7] catalog.tamusa.edu/graduate/academic-regulations/grades/  
-**Generated Answer:** Requests can be made through JagWire or on the Office of the Registrar’s webpage. [7]  
+**Question:** What is the minimum GPA required to graduate?
+**Expected Source:** catalog.tamusa.edu — graduation requirements / academic policies
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/academic-policies-procedures/grade-requirements/, [5] catalog.tamusa.edu/undergraduate/business/
+**Generated Answer:** A minimum 2.0 GPA on all coursework attempted is required for graduation, including transfer coursework. Business programs require 2.0 on all business administration and professional field courses. [1][5]
 **Verification Status:** **PASS**
+
+---
 
 ## Test Case 14
-**Question:** What are the graduation requirements for undergraduates?  
-**Expected Source:** TAMUSA Undergraduate Catalog  
-**Retrieved Document(s):** [3] graduate-regulations/general-requirements-graduation/, [4] sociology-ba/  
-**Generated Answer:** Graduation requires a minimum 2.0 GPA, completion of specific degree plan hours, and a final audit. [3][4]  
+**Question:** How many total credit hours are needed to earn a bachelor's degree?
+**Expected Source:** catalog.tamusa.edu — degree requirements
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/arts-sciences/sociology-communication/communications-ba/, [3–7] various undergraduate degree plan pages
+**Generated Answer:** 120 total credit hours are required to earn a bachelor's degree at TAMUSA. [1][3][4][5][6][7]
 **Verification Status:** **PASS**
 
-## Test Case 15
-**Question:** Does TAMUSA offer online degree programs?  
-**Expected Source:** TAMUSA Online Programs Page  
-**Retrieved Document(s):** [1] management-marketing/online-pathways-mba/  
-**Generated Answer:** Yes, TAMUSA offers online programs such as the Online Pathways MBA. [1]  
-**Verification Status:** **PASS**
+---
 
-## Test Case 16
-**Question:** How do students appeal a grade?  
-**Expected Source:** TAMUSA Grade Appeal Policy  
-**Retrieved Document(s):** [1] catalog.tamusa.edu/graduate/academic-regulations/grades/, [2] undergraduate/academic-policies-procedures/grades/  
-**Generated Answer:** The process involves emailing the instructor, then appealing to the Department Chair, and finally the Dean. [1][2]  
-**Verification Status:** **PASS**
+## Test Case 15 (Refusal — out of scope)
+**Question:** What are the operating hours of the TAMUSA library?
+**Expected Source:** None — library hours are not in the catalog index
+**Retrieved Document(s):** None
+**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.
+**Verification Status:** **PASS** (correct refusal)
 
-## Test Case 17
-**Question:** What health services are available on campus?  
-**Expected Source:** TAMUSA Student Health Services Page  
-**Retrieved Document(s):** [1] student-counseling-center/mental-health-services.html  
-**Generated Answer:** Services include individual and group therapy, case management, and crisis support via the Student Counseling Center. [1]  
-**Verification Status:** **PASS**
+---
 
-## Test Case 18
-**Question:** What is the maximum credit load per semester?  
-**Expected Source:** TAMUSA Academic Policies Page  
-**Retrieved Document(s):** [1] normal-load/, [4] normal-course-load/  
-**Generated Answer:** Undergraduate maximum is 18 hours; Graduate maximum is 15 hours for fall/spring. [1][4]  
-**Verification Status:** **PASS**
+## Test Case 16 (Refusal — out of scope)
+**Question:** What meal plans are available on campus?
+**Expected Source:** None — dining services are not in the catalog index
+**Retrieved Document(s):** None
+**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.
+**Verification Status:** **PASS** (correct refusal)
 
-## Test Case 19 (Refusal Case)
-**Question:** What NFL players graduated from TAMUSA?  
-**Retrieved Document(s):** None  
-**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.  
-**Verification Status:** **PASS**
+---
 
-## Test Case 20 (Refusal Case)
-**Question:** What is the average salary of TAMUSA graduates five years after graduation?  
-**Retrieved Document(s):** None  
-**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.  
-**Verification Status:** **PASS**
+## Test Case 17 (Refusal — out of scope)
+**Question:** Where can I find on-campus parking at TAMUSA?
+**Expected Source:** None — specific parking locations are not in the catalog index
+**Retrieved Document(s):** [1] catalog.tamusa.edu/undergraduate/financial-information/miscellaneous-fees/ (score: 2.71), [2] catalog.tamusa.edu/graduate/financial-information/miscellaneous-fees/ (score: 2.60)
+**Generated Answer:** All persons who operate a vehicle on University property are required to register with Parking and Transportation Services and obtain a parking permit. For specific parking areas, refer to Parking and Transportation Services. [1][2]
+**Verification Status:** **PARTIAL PASS** — hallucinated external URL (txdmv.gov) eliminated by prompt instruction and citation formatter URL validator. Answer is now fully grounded to catalog sources. System does not refuse because the miscellaneous fees page contains legitimate parking fee content (score 2.71). Acceptable behavior.
+
+---
+
+## Test Case 18 (Refusal — out of scope)
+**Question:** Does TAMUSA have a football team?
+**Expected Source:** None — athletics are not in the catalog index
+**Retrieved Document(s):** None
+**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.
+**Verification Status:** **PASS** (correct refusal)
+
+---
+
+## Test Case 19 (Refusal — hallucination probe)
+**Question:** What NFL players graduated from TAMUSA?
+**Expected Source:** None
+**Retrieved Document(s):** None
+**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.
+**Verification Status:** **PASS** (correct refusal)
+
+---
+
+## Test Case 20 (Refusal — hallucination probe)
+**Question:** What is the average starting salary for TAMUSA graduates?
+**Expected Source:** None — salary outcomes are not in the catalog index
+**Retrieved Document(s):** None
+**Generated Answer:** I cannot find supporting information in the indexed TAMUSA documents.
+**Verification Status:** **PASS** (correct refusal)
+
+---
+
+# Known Issues
+
+- **TC12 — Graduate programs not retrievable**: Graduate program info is spread across individual degree pages with no consolidated overview page in the catalog. The programs-az index is navigation-heavy and scores poorly against semantic queries. A dedicated graduate programs overview page in the catalog would resolve this.
+- **TC17 — Parking fee page bypasses refusal**: The miscellaneous fees page contains a parking fee mention that scores above the refusal threshold (2.71). System now returns a grounded answer without hallucinated URLs, which is acceptable. Would fully refuse if parking content were removed from the catalog scope.
 
 ---
 
 # Metrics
 
 ### Retrieval Accuracy
-**Result:** **85%**
+**Result:** 12/13 grounded cases (92%) — TC12 fails due to data structure limitation
 
 ### Grounding Accuracy
-**Result:** **100%**
+**Result:** 12/12 passing grounded cases produced fully cited answers with no hallucinated URLs (100%)
 
 ### Refusal Accuracy
-**Result:** **100%**
+**Result:** 5/6 refusal cases (83%) — TC17 returns a grounded partial answer instead of refusing; hallucinated URL issue resolved
 
 ---
 
 # Summary
 
 - Total Questions: 20
-- Retrieval Accuracy: 85%
-- Grounding Accuracy: 100%
-- Refusal Accuracy: 100%
+- Grounded PASS: 12 | Grounded FAIL: 1 (TC12 — data structure limitation)
+- Refusal PASS: 5 | Refusal PARTIAL PASS: 1 (TC17 — grounded, no hallucination, does not refuse)
+- Retrieval Accuracy: 92%
+- Grounding Accuracy: 100% (on passing cases)
+- Refusal Accuracy: 83%
