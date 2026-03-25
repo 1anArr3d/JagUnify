@@ -7,7 +7,7 @@
 ## Context
 
 - Sprint 1 was intended to make the system reliable, verifiable, and demo-ready.
-- One week from today, Milestone 2 is due.
+- Milestone 2 is due on Apr 5th.
 - Milestone 2 is the MVP milestone, not a planning checkpoint.
 
 By Milestone 2, the team must demonstrate a working MVP with a clearly frozen scope and visible trust signals.
