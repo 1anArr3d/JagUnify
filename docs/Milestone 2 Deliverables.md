@@ -50,7 +50,7 @@ If they are not ready, remove them from MVP claims.
 
 ---
 
-# 2. Required MVP Demo
+# 2. Required MVP Demo Video
 
 In class, you must show all of the following live:
 
