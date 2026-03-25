@@ -23,6 +23,7 @@ By Milestone 2, your team must demonstrate:
 - Clear refusal behavior for unsupported or out-of-scope questions
 - Consistent scope across PRD, README, evaluation, and live demo
 - A clean repository with complete deliverables and no missing required artifacts
+- Minimum functioning UI
 
 The expectation is not breadth.
 The expectation is a small, trustworthy product.
