@@ -28,6 +28,27 @@ export default function ChatWindow() {
     }
   }, [messages, isWaiting]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // ignore if already typing in input
+      if (document.activeElement === inputRef.current) return;
+
+      // ignore modifier keys
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      // only focus on actual character input
+      if (e.key.length === 1) {
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const sendMessage = async () => {
     const content = input.replace(/\s+/g, " ").trim();
     if (!content || isWaiting) return;
@@ -88,7 +109,7 @@ export default function ChatWindow() {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/img/campus.jpg')" }}
     >
-      <div className="mx-auto flex h-screen max-w-6xl flex-col px-4 py-6">
+      <div className="mx-auto flex h-180 max-w-6xl flex-col px-4 pt-15">
         <div className="flex min-h-0 flex-1 flex-col">
           <MessageList
             messages={messages}

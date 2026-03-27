@@ -51,7 +51,7 @@ JagUnify is an AI-powered academic advisor chatbot for Texas A&M University–Sa
 
 1. Navigate to the frontend directory:
    ```
-   cd "Trieu's frontend/react"
+   cd "frontend"
    ```
 2. Create a `.env` file (see `.env.example`):
    ```
