@@ -102,10 +102,10 @@ export default function ChatWindow() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center"
+      className="h-screen overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: "url('/img/campus.jpg')" }}
     >
-      <div className="mx-auto flex h-180 max-w-6xl flex-col px-4 pt-15">
+      <div className="mx-auto flex h-full max-w-6xl flex-col px-4 py-6 mt-9">
         <div className="flex min-h-0 flex-1 flex-col">
           <MessageList
             messages={messages}

@@ -6,7 +6,7 @@ export default function ChatInput({
   sendMessage,
 }) {
   return (
-    <div className="mx-auto mt-4 flex h-[10vh] w-full max-w-5xl items-end justify-center gap-3">
+    <div className="mx-auto mt-4 mb-20 flex w-full max-w-5xl items-end justify-center gap-3">
       <textarea
         ref={inputRef}
         value={input}
@@ -32,7 +32,7 @@ export default function ChatInput({
         <img
           src="/img/jag-send.png"
           alt="send"
-          className="h-100 w-100 object-contain"
+          className="h-25 w-100 object-contain"
         />
       </button>
     </div>
