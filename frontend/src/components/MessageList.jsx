@@ -4,7 +4,7 @@ export default function MessageList({ messages, isWaiting, logRef }) {
   return (
     <div
       ref={logRef}
-      className="mx-auto flex h-[80vh] w-full max-w-5xl flex-1 flex-col overflow-y-auto rounded-xl border border-zinc-300 bg-white/70 pb-12 shadow-lg backdrop-blur-[1px]"
+      className="mx-auto flex h-[100vh] w-full max-w-5xl flex-1 flex-col overflow-y-auto rounded-xl border border-zinc-300 bg-white/70 pb-12 shadow-lg backdrop-blur-[1px]"
     >
       {messages.map((message) => (
         <MessageBubble key={message.id} message={message} />

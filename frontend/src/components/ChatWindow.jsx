@@ -30,13 +30,10 @@ export default function ChatWindow() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // ignore if already typing in input
       if (document.activeElement === inputRef.current) return;
 
-      // ignore modifier keys
       if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-      // only focus on actual character input
       if (e.key.length === 1) {
         inputRef.current?.focus();
       }
@@ -61,7 +58,6 @@ export default function ChatWindow() {
       time: formatTime(now),
     };
 
-    // Snapshot history before adding the new message
     const history = messages.map((m) => ({ role: m.role, text: m.text }));
 
     setMessages((prev) => [...prev, humanMessage]);
