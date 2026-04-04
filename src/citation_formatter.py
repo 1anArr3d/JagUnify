@@ -39,12 +39,28 @@ def format_citations(response):
         answer_text,
     )
 
-    
+    # Extract cited IDs from answer
+    cited_ids = sorted({int(x) for x in re.findall(r"\[(\d+)\]", answer_text)})
+
+    # Create mapping: old → new
+    id_map = {old_id: new_id for new_id, old_id in enumerate(cited_ids, start=1)}
+
+    # Replace citations in answer text
+    def replace_citation(match):
+        old_id = int(match.group(1))
+        return f"[{id_map.get(old_id, old_id)}]"
+
+    answer_text = re.sub(r"\[(\d+)\]", replace_citation, answer_text)
 
     # Build source list with position-based IDs matching the LLM's [1],[2]... numbering.
     # Scores come from the re-ranker — higher means the chunk better answers the question.
     formatted_sources = []
     for i, node in enumerate(response.source_nodes, start=1):
+        if i not in cited_ids:
+            continue
+
+        new_id = id_map[i]
+
         url = node.metadata.get('source_url', 'https://www.tamusa.edu')
         snippet = node.get_content()[:150].strip().replace("\n", " ") + "..."
         score = round(node.score, 4) if node.score is not None else None
