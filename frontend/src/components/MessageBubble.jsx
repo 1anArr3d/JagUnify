@@ -51,9 +51,32 @@ export default function MessageBubble({ message }) {
             : "ml-4 self-start bg-[#6b2f3cab]",
         ].join(" ")}
       >
-        {isHuman
-          ? message.text
-          : renderBotText(message.text, message.sources)}
+        {isHuman ? (
+          message.text
+        ) : (
+          <>
+            {renderBotText(message.text, message.sources)}
+
+            {/* Sources list */}
+            {message.sources && message.sources.length > 0 && (
+              <div className="mt-3 border-t border-white/20 pt-2 text-xs text-blue-200">
+                {message.sources.map((src) => (
+                  <div key={src.id}>
+                    [{src.id}]{" "}
+                    <a
+                      href={src.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline hover:text-blue-400"
+                    >
+                      {src.url}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       <div

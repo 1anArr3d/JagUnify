@@ -39,6 +39,8 @@ def format_citations(response):
         answer_text,
     )
 
+    
+
     # Build source list with position-based IDs matching the LLM's [1],[2]... numbering.
     # Scores come from the re-ranker — higher means the chunk better answers the question.
     formatted_sources = []
