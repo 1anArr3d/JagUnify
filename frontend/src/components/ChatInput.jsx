@@ -21,7 +21,11 @@ export default function ChatInput({
         placeholder={
           isWaiting ? "Waiting for response..." : "Type in your question ..."
         }
-        className="min-h-[64px] w-full resize-none rounded-xl border-2 border-zinc-300 bg-white px-3 py-2 text-lg outline-none transition focus:border-zinc-500 disabled:cursor-not-allowed disabled:bg-zinc-400 disabled:text-black disabled:opacity-100"
+        className="min-h-[64px] w-full resize-none rounded-xl border-2 border-zinc-300 bg-white px-3 py-2 text-lg outline-none transition focus:border-zinc-500 disabled:cursor-not-allowed disabled:bg-zinc-400 disabled:text-black disabled:opacity-100
+        disabled:cursor-not-allowed
+        disabled:bg-zinc-300
+        disabled:text-zinc-500
+        disabled:opacity-70"
       />
 
       <button
