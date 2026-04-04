@@ -14,7 +14,7 @@ TOP_K = 7         # Final chunks passed to the LLM after re-ranking
 # Sets up the engine that turns retrieved chunks into a final answer with citations
 def jag_query_engine(index):
 
-    Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.1)
+    Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0)
 
     # Custom prompt template for strict grounding
     qa_prompt_tmpl_str = (
@@ -25,7 +25,7 @@ def jag_query_engine(index):
         "---------------------\n"
         "Instructions:\n"
         "1. Answer the query using ONLY the context provided.\n"
-        "2. Use inline citations in the format [1], [2], etc.\n"
+        "2. Every sentence that uses information from the context MUST include an inline citation in the format [1], [2], etc. Do not write any factual sentence without a citation.\n"
         "3. Do NOT include any URLs or hyperlinks in your answer. Reference sources using citation numbers only.\n"
         "4. If the answer is not contained in the context, strictly say: "
         "'I am sorry, but I cannot find supporting information in the indexed TAMUSA documents.'\n\n"
