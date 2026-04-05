@@ -220,3 +220,32 @@ This document evaluates the grounding performance and retrieval accuracy of the 
 - Retrieval Accuracy: 92%
 - Grounding Accuracy: 100% (on passing cases)
 - Refusal Accuracy: 83%
+
+## What Changed Since Sprint 1
+
+- Improved grounding enforcement: all generated answers now strictly require catalog citations, eliminating unsupported claims.
+- Hallucination reduction: external/non-catalog URLs are now filtered out via prompt constraints and citation validation.
+- Better refusal behavior: system more consistently refuses when no relevant catalog data is retrieved.
+- Retrieval tuning: adjustments (e.g., candidate selection and ranking) improved coverage for most undergraduate and policy-related queries.
+
+---
+
+## Which Cases Improved
+
+- **TC17 (Parking)**: Previously included hallucinated external links; now fully grounded with valid catalog citations and no unsupported URLs.
+- **Refusal cases (TC15, TC16, TC18, TC19, TC20)**: More consistent and reliable refusals with correct “no supporting information” responses.
+- **All PASS cases (TC1–TC11, TC13–TC14)**: Maintain high grounding accuracy with stricter enforcement—no regression observed.
+
+---
+
+## Which Cases Still Fail and Why
+
+- **TC12 (Graduate Programs)** — **FAIL**
+  - **Issue:** Relevant information exists but is fragmented across many individual program pages.
+  - **Cause:** The catalog lacks a centralized “graduate programs overview” page; the Programs A–Z index is navigation-heavy and performs poorly in retrieval/ranking.
+  - **Result:** No relevant chunks retrieved → system correctly refuses, but fails the test expectation.
+
+- **TC17 (Parking)** — **PARTIAL PASS**
+  - **Issue:** System does not refuse because a loosely relevant catalog page (miscellaneous fees) is retrieved.
+  - **Cause:** Retrieval score exceeds refusal threshold due to indirect mention of parking fees.
+  - **Result:** Acceptable grounded answer, but not a strict refusal.
