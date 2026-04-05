@@ -2,6 +2,13 @@
 
 JagUnify is an AI-powered academic advisor chatbot for Texas A&M University–San Antonio students. It answers questions about degree requirements, admissions, financial aid, academic policies, and registration using official catalog sources — with verifiable citations.
 
+## MVP Scope
+* **User Question Input:** A text-based interface where students can submit inquiries.
+* **Document Retrieval:** A retrieval engine that pulls relevant context from indexed TAMUSA documents.
+* **Answer Generation:** The LLM will respond to the query with an answer grounded in evidence pulled from the data sources, or will refuse to provide an answer if evidence is not available
+* **Providing Citations:** The response from the LLM will have both in-line citations to denote information pulled from a source, as well as a list of clickable links that take the user to the cited page.
+
+
 ## Features
 
 - Grounded answers with inline citations linking to official catalog pages
@@ -67,9 +74,17 @@ JagUnify is an AI-powered academic advisor chatbot for Texas A&M University–Sa
    ```
 5. Open `http://localhost:5173`
 
+## Grounded Example
+
+The user asks the tool, "What is the required GPA to avoid academic probation?" The LLM will respond by stating that the GPA for avoiding academic probation is 2.0, as well as providing more specific information for other specific rpograms. It will include in-line citations that back up its answer, as well as  
+
+## Refusal Example
+
+The user will ask the tool what the operating hours for the university's library are. This information isn't actually available within any of the documents the system is able to pull from, so it responds by saying "I cannot find supporting information in the included TAMUSA documents."
+
 ## Project Status
 
-Currently in active development for an academic course (Sprint 1 complete).
+Currently in active development for an academic course (Milestone 2 complete).
 
 ## Team
 
