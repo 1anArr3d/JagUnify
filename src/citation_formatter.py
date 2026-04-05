@@ -65,7 +65,7 @@ def format_citations(response):
         snippet = node.get_content()[:150].strip().replace("\n", " ") + "..."
         score = round(node.score, 4) if node.score is not None else None
         formatted_sources.append({
-            "id": i,
+            "id": new_id,
             "url": url,
             "snippet": snippet,
             "score": score,
