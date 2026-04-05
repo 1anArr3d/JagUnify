@@ -8,6 +8,31 @@ JagUnify is an AI-powered academic advisor chatbot for Texas A&M University–Sa
 * **Answer Generation:** The LLM will respond to the query with an answer grounded in evidence pulled from the data sources, or will refuse to provide an answer if evidence is not available
 * **Providing Citations:** The response from the LLM will have both in-line citations to denote information pulled from a source, as well as a list of clickable links that take the user to the cited page.
 
+## Scope Statement
+
+**In Scope Domains**
+- TAMUSA undergraduate and graduate **catalog content** (`catalog.tamusa.edu`)
+- Degree requirements (e.g., majors, credit hours, graduation criteria)
+- Academic policies (GPA requirements, probation, appeals, registration rules)
+- Admissions requirements (first-year and transfer)
+- Financial aid information (FAFSA process, eligibility, deadlines)
+- Course and curriculum information explicitly defined in the catalog
+
+**Out of Scope Domains**
+- Campus services not included in the catalog (library hours, dining, housing, parking locations)
+- Athletics, student life, and extracurricular activities
+- Real-time or operational information (event schedules, office hours, deadlines outside catalog)
+- External outcomes data (job placement rates, salaries, alumni info)
+- Any non-TAMUSA or non-catalog sources
+
+**System Refusal Behavior**
+- The system will **refuse to answer** if:
+  - No relevant catalog source is retrieved
+  - The question falls outside the catalog domain
+  - The answer cannot be supported with at least one verifiable citation
+- Refusals follow a consistent format:
+  > "I cannot find supporting information in the indexed TAMUSA documents."
+- The system will **not guess, infer, or use external knowledge** beyond retrieved catalog content
 
 ## Features
 
